@@ -5,31 +5,31 @@ using {managed} from '@sap/cds/common';
 //Entity
 entity OrderHeaders : managed {
     key id                  : UUID;
-    key ordernumber         : Int32;
-        customerid          : String(10);
-        documenttype        : String(4);
-        salesorganization   : String(4);
-        distributionchannel : String(2);
-        division            : String(2);
-        netvalue            : Decimal(15, 2);
+    key ordernumber         : Int32          @(title: 'Order Number');
+        customerid          : String(10)     @(title: 'Customer ID');
+        documenttype        : String(4)      @(title: 'Document Type');
+        salesorganization   : String(4)      @(title: 'Sales Organization');
+        distributionchannel : String(2)      @(title: 'Distribution Channel');
+        division            : String(2)      @(title: 'Division');
+        netvalue            : Decimal(15, 2) @(title: 'Net Value');
 // orderitems          : Association to many OrderItems
 //                           on orderitems.ordernumber = $self;
 }
 
 entity OrderItems {
     key id          : UUID;
-    key ordernumber : Association to OrderHeaders;
-    key itemnumber  : String(10);
-        material    : String(18);
-        batch       : String(10);
-        description : String(40);
-        price       : Decimal(15, 2);
+    key ordernumber : Association to OrderHeaders @(title: 'Order Number');
+    key itemnumber  : String(10)                  @(title: 'Item Number');
+        material    : String(18)                  @(title: 'Material Number');
+        batch       : String(10)                  @(title: 'Batch');
+        description : String(40)                  @(title: 'Description');
+        price       : Decimal(15, 2)              @(title: 'Price');
 }
 
 entity Materials {
     key id             : UUID;
-    key materialnumber : String(20);
-        materialname   : String(50);
+    key materialnumber : String(20) @(title: 'Material Number');
+        materialname   : String(50) @(title: 'Material Name');
 }
 
 //View
@@ -41,7 +41,7 @@ view CV_OrdersWithDetails as
         on Materials.materialnumber = OrderItems.material
     {
         key OrderItems.ordernumber.ordernumber as OrderNumber,
-            OrderItems.description as Description,
-        key OrderItems.material as MaterialNumber,
-            Materials.materialname as MaterialName,
+            OrderItems.description             as Description,
+        key OrderItems.material                as MaterialNumber,
+            Materials.materialname             as MaterialName,
     }
