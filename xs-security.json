@@ -1,0 +1,43 @@
+{
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.salesorderAdmin",
+      "description": "salesorderAdmin"
+    },
+    {
+      "name": "$XSAPPNAME.salesorderRead",
+      "description": "salesorderRead"
+    },
+    {
+      "name": "$XSAPPNAME.salesorderUser",
+      "description": "salesorderUser"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "salesorderAdmin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.salesorderAdmin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "salesorderRead",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.salesorderRead"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "salesorderUser",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.salesorderUser"
+      ],
+      "attribute-references": []
+    }
+  ]
+}
