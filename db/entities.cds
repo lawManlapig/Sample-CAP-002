@@ -45,3 +45,10 @@ view CV_OrdersWithDetails as
         key OrderItems.material                as MaterialNumber,
             Materials.materialname             as MaterialName,
     }
+
+//View for Value Help
+view CV_Materials as
+    select from Materials {
+        Materials.materialnumber as MaterialNumber,
+        Materials.materialname   as MaterialName
+    }

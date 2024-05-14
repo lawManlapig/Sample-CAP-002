@@ -36,6 +36,7 @@ service entitiessrv @(require: 'authenticated-user') {
     entity OrderItems    as projection on entities.OrderItems;
 
     entity OrdersDetails as projection on entities.CV_OrdersWithDetails;
+    entity F4_Materials  as projection on entities.CV_Materials;
 }
 
 //Odata Draft Annotation >> This will enable Drafts and "Create" & "Edit" functionality.. basta madami madadagadag sa app
@@ -43,9 +44,9 @@ service entitiessrv @(require: 'authenticated-user') {
 //Annotation
 annotate entities.CV_OrdersWithDetails with @(UI: {
     // CreateHidden : true,
-    DeleteHidden : true,
+    DeleteHidden            : true,
     //Header Info (Yung makikita mo sa screen)
-    HeaderInfo: {
+    HeaderInfo              : {
         $Type         : 'UI.HeaderInfoType',
         TypeName      : 'SO TypeName',
         TypeNamePlural: 'SO TypeName (Plural)',
@@ -54,50 +55,75 @@ annotate entities.CV_OrdersWithDetails with @(UI: {
     },
 
     //Selection Fields
-    SelectionFields  : [
+    SelectionFields         : [
         MaterialName,
         MaterialNumber,
         OrderNumber
     ],
 
     //Line Item
-    LineItem  : [
+    LineItem                : [
         {Value: MaterialNumber},
-        {Value: MaterialName}
+        {
+            Value                  : MaterialName,
+            ![@Common.FieldControl]: #ReadOnly
+        }
     ],
 
     //Facets
-    Facets  : [{
-        $Type : 'UI.CollectionFacet',
-        ID: '1', //Grouping number.. incase you need to add more in the future
-        Label : 'Material Details',
-        Facets: [{
-            $Type : 'UI.ReferenceFacet',
-            Target: '@UI.FieldGroup#ItemDetails',
-        }],
-    },
-    {
-        $Type : 'UI.CollectionFacet',
-        ID: '2', //Grouping number.. incase you need to add more in the future
-        Label : 'Order Details',
-        Facets: [{
-            $Type : 'UI.ReferenceFacet',
-            Target: '@UI.FieldGroup#OrderDetails',
-        }],
-    }],
+    Facets                  : [
+        {
+            $Type : 'UI.CollectionFacet',
+            ID    : '1', //Grouping number.. incase you need to add more in the future
+            Label : 'Material Details',
+            Facets: [{
+                $Type : 'UI.ReferenceFacet',
+                Target: '@UI.FieldGroup#ItemDetails',
+            }],
+        },
+        {
+            $Type : 'UI.CollectionFacet',
+            ID    : '2', //Grouping number.. incase you need to add more in the future
+            Label : 'Order Details',
+            Facets: [{
+                $Type : 'UI.ReferenceFacet',
+                Target: '@UI.FieldGroup#OrderDetails',
+            }],
+        }
+    ],
 
     //Field Group (Dapat aligned ito to dun sa Facet > Target)
     FieldGroup #ItemDetails : {
-        $Type : 'UI.FieldGroupType',
-        Data: [
+        $Type: 'UI.FieldGroupType',
+        Data : [
             {Value: MaterialNumber},
             {Value: MaterialName}
-        ]},
+        ]
+    },
 
-    FieldGroup #OrderDetails : {
-        $Type : 'UI.FieldGroupType',
-        Data: [
+    FieldGroup #OrderDetails: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
             {Value: OrderNumber},
             {Value: Description}
-        ]}
+        ]
+    }
 });
+
+//Functionality
+annotate entities.CV_OrdersWithDetails with {
+    MaterialNumber @(
+        title         : 'Material Number',
+        sap.value.list: 'fixed-values',
+        Common        : {
+            ValueListWithFixedValues,
+            ValueList: {
+                CollectionPath: 'F4_Materials',
+                Parameters    : [{
+                    $Type            : 'Common.ValueListParameterInOut',
+                    ValueListProperty: ''
+                }]
+            },
+        }
+    )
+};
